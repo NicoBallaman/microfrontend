@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Micro-frontends using Web Components</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .intro {
+            margin: 30px 0;
+        }
+        
+        .repo {
+            margin: 30px 0;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .card-body {
+            width: 100%;
+            height: 350px;
+        }
+        
+        .logo {
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        
+        .icon-ng {
+            width: 28px;
+            margin-right: 5px;
+        }
+        
+        .icon-react {
+            width: 44px;
+        }
+        
+        .console {
+            margin-top: 20px;
+        }
+        
+        .console h4 {
+            margin-bottom: 15px;
+            border-bottom: solid 1px #000000;
+            padding-bottom: 5px;
+        }
+        
+        .console p {
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+
+<body onload="tellComponents(false)">
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <nav class="navbar navbar-light bg-light">
+                    <span class="navbar-brand mb-0 h1">Micro-frontends using Web Components</span>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h4 class="text-center mt-4">Rock Paper or Scissors</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 offset-3 col-md-4 offset-md-4">
+
+                <!--
+                  <div class="form-group">
+                    <input type="text" onClick="this.setSelectionRange(0, this.value.length)" class="form-control" id="yourName" aria-describedby="yourName" placeholder="Your name" value="Chris" />
+                    <small id="emailHelp" class="form-text text-muted">Enter your name above then click the button below to tell the components.</small>
+                  </div>
+                -->
+                <button type="submit" class="btn btn-primary btn-lg btn-block mt-4 mb-4" onclick="tellComponents(true)">Start!</button>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <h5 class="card-header"><img src="./images/ng.svg" class="icon-ng"> Angular</h5>
+                    <div class="card-body" id="ng-container"></div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h5 class="card-header"><img src="./images/react.png" class="icon-react">React</h5>
+                    <div class="card-body" id="react-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row console">
+            <div class="col p-2 m-4 rounded border border-primary">
+                <h2 class="text-primary text-center" id="winnerText"></h2>
+            </div>
+        </div>
+        <div class="row console">
+            <div class="col">
+                <div class="alert alert-dark" role="alert">
+                    <h4 class="alert-heading">Log</h4>
+                    <div id="messages"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var valueNg = 0;
+        var valueReact = 0;
+        var resultNg = null;
+        var resultReact = null;
+
+        const values = [
+            { value: 1, text: 'Rock', win: 3},
+            { value: 2, text: 'Paper', win: 1},
+            { value: 3, text: 'Scissors', win:2},
+        ];
+        
+        function tellComponents(start) {
+            valueNg = 0;
+            valueReact = 0;
+            resultNg = null;
+            resultReact = null;
+            document.getElementById('winnerText').innerHTML = '';
+
+            createElementReact(start, resultReact)
+
+            ////////////////////////////////////////////////
+
+            createElementAngular(start, resultNg);
+
+        }
+
+        function logMessage(source, msg) {
+            const msgContainer = document.getElementById('messages');
+            msgContainer.innerHTML += `<p><strong>${source}: </strong> ${msg}`;
+        }
+
+        function getResult(){
+
+            if(!valueNg || !valueReact) {
+                return
+            }
+            resultNg = '';
+            resultReact = '';
+            winnerText = '';
+
+            if(valueNg == valueReact) {
+                resultNg = 'equal';
+                resultReact = 'equal';
+                winnerText = 'None wins';
+            }else{
+                const check = values.find(x => x.value == valueNg);
+                if(check.win == valueReact){ //Angular win
+                    resultNg = 'winner';
+                    resultReact = 'loser';
+                    winnerText = check.text + ' wins ' + values.find(x => x.value == valueReact).text + '. Angular WIN!';
+                }else{ //React win
+                    resultNg = 'loser';
+                    resultReact = 'winner';
+                    winnerText = values.find(x => x.value == valueReact).text + ' wins ' + check.text + '. React WIN!';
+                }
+            }
+            
+            
+            document.getElementById('winnerText').innerHTML = winnerText;
+            setTimeout(() => {
+
+                const reactEl = document.getElementById('react-el');
+                reactEl.setAttribute('start', false);
+                reactEl.setAttribute('result', resultReact);
+                createElementAngular(false, resultNg);
+
+            }, 1000);
+        }
+
+        function createElementAngular(start, resultNg){
+            const ngEl = document.createElement('ng-el');
+            ngEl.setAttribute('id', 'ng-el');
+            ngEl.setAttribute('start', start);
+            ngEl.setAttribute('result', resultNg);
+            ngEl.addEventListener('helloEvt', (e) => {
+                if (e.detail) {
+                    valueNg = e.detail;
+                    logMessage('Angular', valueNg + '- ' + values.find(x => x.value == valueNg).text)
+                    getResult();
+                }
+            });
+            const ngElContainer = document.getElementById('ng-container')
+            if (ngElContainer.children.length > 0) {
+                ngElContainer.removeChild(ngElContainer.children[0]);
+            }
+            ngElContainer.appendChild(ngEl);
+        }
+
+        function createElementReact(start, resultReact){
+            const reactEl = document.createElement('react-el');
+            reactEl.setAttribute('id', 'react-el');
+            reactEl.setAttribute('start', start);
+            reactEl.setAttribute('result', resultReact);
+            reactEl.setAttribute('onHelloEvt', 'onHelloEvt');
+            reactEl.addEventListener('onHelloEvt', (e) => {
+                if (e.detail) {
+                    valueReact = e.detail;
+                    logMessage('React', valueReact + '- ' + values.find(x => x.value == valueReact).text)
+                    getResult();
+                }
+            });
+
+            const reactElContainer = document.getElementById('react-container')
+            if (reactElContainer.children.length > 0) {
+                reactElContainer.removeChild(reactElContainer.children[0]);
+            }
+            reactElContainer.appendChild(reactEl);
+        }
+
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.9.1/zone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.2.10/custom-elements-es5-adapter.js"></script>
+    <script src="http://localhost:5001/main.js"></script>
+    <script src="http://localhost:5002/main.js"></script>
+</body>
+
+</html>
