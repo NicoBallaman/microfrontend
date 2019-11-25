@@ -37,7 +37,13 @@ export class ExampleComponent extends React.Component {
         let count = 1;
         let intents = 0;
         let procesoID = setInterval(() => {
-            if(intents == 20) this.finally(procesoID);
+            if(intents == 20) {
+                this.finally(procesoID)
+                clearInterval(procesoID); 
+                return;
+            };
+            /*
+            */
             this.setState({
                 selectedValue: this.state.values.find(x => x.value == count)
             })
@@ -47,10 +53,12 @@ export class ExampleComponent extends React.Component {
     }
     
     
-    finally(procesoID) { 
-        clearInterval(procesoID); 
+    finally() { 
         const val = Math.floor(Math.random() * 3) + 1;
         const selectedValue = this.state.values.find(x => x.value == val);
+        this.setState({
+            selectedValue: selectedValue
+        })
         this.sendValue(selectedValue.value)
     }
 
