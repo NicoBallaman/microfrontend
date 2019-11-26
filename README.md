@@ -4,7 +4,9 @@
 ### Un ejemplo de de micro-frontends partiendo de la siguiente [guía](https://medium.com/javascript-in-plain-english/create-micro-frontends-using-web-components-with-support-for-angular-and-react-2d6db18f557a)
 
 
-En este caso, un piedra papel o tijera entre angular y react en el que se envian datos al componente padre como tambien se reciben datos del mismo
+En este caso, un piedra papel o tijera entre angular y react en el que se envian y reciben datos al componente padre.
+
+![Alt Text](https://github.com/NicoBallaman/microfrontend/blob/master/micro-fe-wrapper/images/example.gif)
 
 La pagina esta compuesta por un index.html que contiene componentes de angular y react. La estructura es la siguiente
 
@@ -48,4 +50,5 @@ npm start
 
 ### Open
 http://localhost:5000
+
 
