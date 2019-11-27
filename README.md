@@ -11,7 +11,7 @@ I build a simple Rock, papper and sicssors game with <strong>Angular</strong> an
 
 
 ## Structure
-The page is an index.thml file whit two components. One in angular and another in react.
+The page is an index.thml file with two components. One in angular and another in react.
 
 ![alt text](https://github.com/NicoBallaman/microfrontend/blob/master/micro-fe-wrapper/images/structure.jpg?raw=true "structure")
 
