@@ -5,7 +5,7 @@
 This example pass data to both components from the parent container, and back again.
 [Reference](https://medium.com/javascript-in-plain-english/create-micro-frontends-using-web-components-with-support-for-angular-and-react-2d6db18f557a)
 
-I build a simple Rock, papper and sicssors game whit <strong>Angular</strong> and <strong>React</strong>
+I build a simple Rock, papper and sicssors game with <strong>Angular</strong> and <strong>React</strong>
 
 ![Alt Text](https://github.com/NicoBallaman/microfrontend/blob/master/micro-fe-wrapper/images/example.gif)
 
